@@ -41,6 +41,18 @@ import java.lang.reflect.Field
 class TinkerPatchPlugin implements Plugin<Project> {
     public static final String ISSUE_URL = "https://github.com/Tencent/tinker/issues"
 
+    private static String fuckBug = "\n" +
+            "   █████▒█    ██  ▄████▄   ██ ▄█▀       ██████╗ ██╗   ██╗ ██████╗\n" +
+            " ▓██   ▒ ██  ▓██▒▒██▀ ▀█   ██▄█▒        ██╔══██╗██║   ██║██╔════╝\n" +
+            " ▒████ ░▓██  ▒██░▒▓█    ▄ ▓███▄░        ██████╔╝██║   ██║██║  ███╗\n" +
+            " ░▓█▒  ░▓▓█  ░██░▒▓▓▄ ▄██▒▓██ █▄        ██╔══██╗██║   ██║██║   ██║\n" +
+            " ░▒█░   ▒▒█████▓ ▒ ▓███▀ ░▒██▒ █▄       ██████╔╝╚██████╔╝╚██████╔╝\n" +
+            "  ▒ ░   ░▒▓▒ ▒ ▒ ░ ░▒ ▒  ░▒ ▒▒ ▓▒       ╚═════╝  ╚═════╝  ╚═════╝\n" +
+            "  ░     ░░▒░ ░ ░   ░  ▒   ░ ░▒ ▒░\n" +
+            "  ░ ░    ░░░ ░ ░ ░        ░ ░░ ░\n" +
+            "           ░     ░ ░      ░  ░\n" +
+            "                                                                          --------GXX \n"
+
     private Project mProject = null
 
     @Override
@@ -93,6 +105,8 @@ class TinkerPatchPlugin implements Plugin<Project> {
                 mProject.logger.error("tinker tasks are disabled.")
                 return
             }
+
+            println(fuckBug)
 
             mProject.logger.error("----------------------tinker build warning ------------------------------------")
             mProject.logger.error("tinker auto operation: ")
