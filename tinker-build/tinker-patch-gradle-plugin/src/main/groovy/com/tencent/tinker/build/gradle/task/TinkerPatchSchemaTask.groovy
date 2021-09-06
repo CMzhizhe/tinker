@@ -125,13 +125,15 @@ public class TinkerPatchSchemaTask extends DefaultTask {
         def outputDir = new File(outputFolder)
         outputDir.mkdirs()
 
+        //add one assets/wj_apptinkerid.txt
+        configuration.res.ignoreChange.add("assets/wj_apptinkerid.txt")
+
         for (def i = 0; i < newApks.size(); ++i) {
             def oldApk = oldApks[i] as File
             def newApk = newApks[i] as File
 
             def packageConfigFields = new HashMap<String, String>(configuration.packageConfig.getFields())
             packageConfigFields.putAll(configuration.packageConfig.getApkSpecFields(newApk.getName()))
-
             builder.setOldApk(oldApk.getAbsolutePath())
                     .setNewApk(newApk.getAbsolutePath())
                     .setOutBuilder(tmpDir.getAbsolutePath())

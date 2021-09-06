@@ -31,6 +31,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -41,7 +43,10 @@ import com.tencent.tinker.lib.tinker.TinkerInstaller;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
 import com.tencent.tinker.loader.shareutil.ShareTinkerInternals;
 
+import java.io.File;
+
 import tinker.sample.android.R;
+import tinker.sample.android.util.FileSDCardUtil;
 import tinker.sample.android.util.Utils;
 
 public class MainActivity extends AppCompatActivity {
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         boolean isARKHotRunning = ShareTinkerInternals.isArkHotRuning();
+        Toast.makeText(this, "我修复啦", Toast.LENGTH_LONG).show();
         Log.e(TAG, "ARK HOT Running status = " + isARKHotRunning);
         Log.e(TAG, "i am on onCreate classloader:" + MainActivity.class.getClassLoader().toString());
         //test resource change
@@ -69,7 +75,11 @@ public class MainActivity extends AppCompatActivity {
         loadPatchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TinkerInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
+                String path = FileSDCardUtil.getInstance().getSandboxPublickDiskTinkerCacheDir(MainActivity.this, "patch") + "/patch_signed_7zip.apk";
+                File file = new File(path);
+                if (file.exists()){
+                    TinkerInstaller.onReceiveUpgradePatch(getApplicationContext(), file.getAbsolutePath());
+                }
             }
         });
 
@@ -125,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         if (!hasRequiredPermissions()) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
         }
     }
 
@@ -146,8 +156,6 @@ public class MainActivity extends AppCompatActivity {
         Tinker tinker = Tinker.with(getApplicationContext());
         if (tinker.isTinkerLoaded()) {
             sb.append(String.format("[patch is loaded] \n"));
-            sb.append(String.format("[buildConfig TINKER_ID] %s \n", BuildInfo.TINKER_ID));
-            sb.append(String.format("[buildConfig BASE_TINKER_ID] %s \n", BaseBuildInfo.BASE_TINKER_ID));
 
             sb.append(String.format("[buildConfig MESSSAGE] %s \n", BuildInfo.MESSAGE));
             sb.append(String.format("[TINKER_ID] %s \n", tinker.getTinkerLoadResultIfPresent().getPackageConfigByName(ShareConstants.TINKER_ID)));
@@ -156,8 +164,6 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             sb.append(String.format("[patch is not loaded] \n"));
-            sb.append(String.format("[buildConfig TINKER_ID] %s \n", BuildInfo.TINKER_ID));
-            sb.append(String.format("[buildConfig BASE_TINKER_ID] %s \n", BaseBuildInfo.BASE_TINKER_ID));
 
             sb.append(String.format("[buildConfig MESSSAGE] %s \n", BuildInfo.MESSAGE));
             sb.append(String.format("[TINKER_ID] %s \n", ShareTinkerInternals.getManifestTinkerID(getApplicationContext())));
