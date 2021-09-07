@@ -171,6 +171,11 @@ class TinkerPatchPlugin implements Plugin<Project> {
                     if (!assestFile.exists()){
                         assestFile.mkdirs();
                     }
+
+                    if (!assestFile.exists()){
+                        throw new GradleException("assets dir not create")
+                    }
+
                     File apptinkerIDFile = new File(assestFile.getAbsolutePath()+ "/wj_apptinkerid.txt")
                     if(apptinkerIDFile.exists()){
                         apptinkerIDFile.delete();
@@ -180,7 +185,6 @@ class TinkerPatchPlugin implements Plugin<Project> {
                     apptinkerIDFile.withOutputStream {  osm ->
                         osm.write(("tinker_id=" + configuration.buildConfig.tinkerId).getBytes())
                     }
-                    println("=================end write apptinkerid to assets ===============")
                 }
                 def tinkerManifestTask = mProject.tasks.create("tinkerProcess${capitalizedVariantName}Manifest", TinkerManifestTask)
                 tinkerManifestTask.mustRunAfter agpProcessManifestTask
